@@ -6,37 +6,28 @@ import plotly.express as px
 # Load the data
 data = pd.read_excel("PPD_Competencies.xlsx")
 
-# Sidebar for PDD Section filter using radio buttons and anchor links
+# Sidebar for PDD Section filter using radio buttons
 sections = ["All sections"] + list(data["PDD Section"].unique())
 selected_section = st.sidebar.radio("Select PDD Section", sections)
 
-# Sidebar anchor links
-st.sidebar.markdown("[Policy Design Framework/Process](#policy-design)")
-st.sidebar.markdown("[Memo Writing](#memo-writing)")
-st.sidebar.markdown("[Oral Briefing](#oral-briefing)")
-
-if selected_section == "All sections":
-    filtered_data = data
-else:
-    filtered_data = data[data["PDD Section"] == selected_section]
+# Sidebar buttons for navigating to sections
+selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Process", "Memo Writing", "Oral Briefing"])
 
 # Define Likert scale ordering
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 
-# Visualize distribution of responses for the "Policy Design Framework/Process" section
-st.markdown("<a id='policy-design'></a>", unsafe_allow_html=True)
-st.header("Policy Design Framework/Process")
-# ... [rest of the Policy Design code]
+# Only show content for the selected anchor
+if selected_anchor == "Policy Design Framework/Process":
+    st.header("Policy Design Framework/Process")
+    # ... [rest of the Policy Design code]
 
-# Visualize distribution of responses for the "Memo Writing" section
-st.markdown("<a id='memo-writing'></a>", unsafe_allow_html=True)
-st.header("Memo Writing")
-# ... [rest of the Memo Writing code]
+elif selected_anchor == "Memo Writing":
+    st.header("Memo Writing")
+    # ... [rest of the Memo Writing code]
 
-# Visualize distribution of responses for the "Oral Briefing" section
-st.markdown("<a id='oral-briefing'></a>", unsafe_allow_html=True)
-st.header("Oral Briefing")
-# ... [rest of the Oral Briefing code]
+elif selected_anchor == "Oral Briefing":
+    st.header("Oral Briefing")
+    # ... [rest of the Oral Briefing code]
 
 # Display random responses for the open-ended questions
 for question in data.columns[-2:]:
