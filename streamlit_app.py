@@ -16,18 +16,36 @@ selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Proc
 # Define Likert scale ordering
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 
+# Filter data according to the selected section
+if selected_section == "All sections":
+    filtered_data = data
+else:
+    filtered_data = data[data["PDD Section"] == selected_section]
+
 # Only show content for the selected anchor
 if selected_anchor == "Policy Design Framework/Process":
     st.header("Policy Design Framework/Process")
-    # ... [rest of the Policy Design code]
+    for question in data.columns[2:12]:  # First 10 questions
+        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+        value_counts.columns = ['Response', 'Count']
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+        st.plotly_chart(fig)
 
 elif selected_anchor == "Memo Writing":
     st.header("Memo Writing")
-    # ... [rest of the Memo Writing code]
+    for question in data.columns[12:15]:  # Next 3 questions
+        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+        value_counts.columns = ['Response', 'Count']
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+        st.plotly_chart(fig)
 
 elif selected_anchor == "Oral Briefing":
     st.header("Oral Briefing")
-    # ... [rest of the Oral Briefing code]
+    for question in data.columns[15:18]:  # Final 3 questions
+        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+        value_counts.columns = ['Response', 'Count']
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+        st.plotly_chart(fig)
 
 # Display random responses for the open-ended questions
 for question in data.columns[-2:]:
