@@ -30,6 +30,8 @@ for question in data.columns[2:-2]:  # Excluding the open-ended questions
 # Display random responses for the open-ended questions
 for question in data.columns[-2:]:
     st.write(f"Random Responses for: {question}")
-    sample_responses = filtered_data[question].dropna().sample(5)
+    available_responses = filtered_data[question].dropna()
+    sample_size = min(len(available_responses), 5)
+    sample_responses = available_responses.sample(sample_size)
     for idx, response in sample_responses.iteritems():
         st.write(f"- {response}")
