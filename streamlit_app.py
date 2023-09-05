@@ -6,9 +6,14 @@ import plotly.express as px
 # Load the data
 data = pd.read_excel("PPD_Competencies.xlsx")
 
-# Sidebar for PDD Section filter using radio buttons
+# Sidebar for PDD Section filter using radio buttons and anchor links
 sections = ["All sections"] + list(data["PDD Section"].unique())
 selected_section = st.sidebar.radio("Select PDD Section", sections)
+
+# Sidebar anchor links
+st.sidebar.markdown("[Policy Design Framework/Process](#policy-design)")
+st.sidebar.markdown("[Memo Writing](#memo-writing)")
+st.sidebar.markdown("[Oral Briefing](#oral-briefing)")
 
 if selected_section == "All sections":
     filtered_data = data
@@ -18,40 +23,20 @@ else:
 # Define Likert scale ordering
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 
-def wrap_title(title, max_length=50):
-    """Wrap title if it exceeds max_length."""
-    if len(title) > max_length:
-        # Split title roughly in the middle
-        midpoint = len(title) // 2
-        # Find the nearest space to the midpoint
-        break_point = title.rfind(' ', 0, midpoint)
-        if break_point != -1:
-            return title[:break_point] + "<br>" + title[break_point+1:]
-    return title
-
 # Visualize distribution of responses for the "Policy Design Framework/Process" section
+st.markdown("<a id='policy-design'></a>", unsafe_allow_html=True)
 st.header("Policy Design Framework/Process")
-for question in data.columns[2:12]:  # First 10 questions
-    value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
-    value_counts.columns = ['Response', 'Count']
-    fig = px.bar(value_counts, x='Response', y='Count', title=wrap_title(f"Responses for: {question}"))
-    st.plotly_chart(fig)
+# ... [rest of the Policy Design code]
 
 # Visualize distribution of responses for the "Memo Writing" section
+st.markdown("<a id='memo-writing'></a>", unsafe_allow_html=True)
 st.header("Memo Writing")
-for question in data.columns[12:15]:  # Next 3 questions
-    value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
-    value_counts.columns = ['Response', 'Count']
-    fig = px.bar(value_counts, x='Response', y='Count', title=wrap_title(f"Responses for: {question}"))
-    st.plotly_chart(fig)
+# ... [rest of the Memo Writing code]
 
 # Visualize distribution of responses for the "Oral Briefing" section
+st.markdown("<a id='oral-briefing'></a>", unsafe_allow_html=True)
 st.header("Oral Briefing")
-for question in data.columns[15:18]:  # Final 3 questions
-    value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
-    value_counts.columns = ['Response', 'Count']
-    fig = px.bar(value_counts, x='Response', y='Count', title=wrap_title(f"Responses for: {question}"))
-    st.plotly_chart(fig)
+# ... [rest of the Oral Briefing code]
 
 # Display random responses for the open-ended questions
 for question in data.columns[-2:]:
