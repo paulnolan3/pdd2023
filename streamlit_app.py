@@ -16,11 +16,9 @@ st.write(filtered_data.describe())
 
 # Visualize distribution of responses for each question
 for question in data.columns[2:-2]:  # Excluding the open-ended questions
-    fig = px.bar(filtered_data[question].value_counts().reset_index(), 
-                 x='index', 
-                 y=question, 
-                 title=f"Responses for: {question}", 
-                 labels={'index': 'Responses', question: 'Count'})
+    value_counts = filtered_data[question].value_counts().reset_index()
+    value_counts.columns = ['Response', 'Count']
+    fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
     st.plotly_chart(fig)
 
 # Display PDD Section distribution with a pie chart
