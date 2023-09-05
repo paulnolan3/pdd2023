@@ -1,7 +1,7 @@
 # Import necessary libraries
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 # Load the data
 data = pd.read_excel("PPD_Competencies.xlsx")
@@ -16,17 +16,16 @@ st.write(filtered_data.describe())
 
 # Visualize distribution of responses for each question
 for question in data.columns[2:-2]:  # Excluding the open-ended questions
-    st.write(f"Responses for: {question}")
-    fig, ax = plt.subplots()
-    filtered_data[question].value_counts().sort_index().plot(kind="bar", ax=ax)
-    plt.xticks(rotation=45, ha='right')
-    st.pyplot(fig)
+    fig = px.bar(filtered_data[question].value_counts().reset_index(), 
+                 x='index', 
+                 y=question, 
+                 title=f"Responses for: {question}", 
+                 labels={'index': 'Responses', question: 'Count'})
+    st.plotly_chart(fig)
 
 # Display PDD Section distribution with a pie chart
-st.write("PDD Section Distribution")
-fig, ax = plt.subplots()
-data["PDD Section"].value_counts().plot(kind="pie", ax=ax, autopct='%1.1f%%')
-st.pyplot(fig)
+fig = px.pie(data, names='PDD Section', title='PDD Section Distribution')
+st.plotly_chart(fig)
 
 # Display random responses for the open-ended questions
 for question in data.columns[-2:]:
