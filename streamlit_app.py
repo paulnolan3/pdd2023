@@ -18,7 +18,7 @@ else:
 # Define Likert scale ordering
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 
-def wrap_title(title, max_length=30):
+def wrap_title(title, max_length=50):
     """Wrap title if it exceeds max_length."""
     if len(title) > max_length:
         # Split title roughly in the middle
