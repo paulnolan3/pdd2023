@@ -18,12 +18,27 @@ else:
 # Define Likert scale ordering
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 
-# Visualize distribution of responses for each question
-for question in data.columns[2:-2]:  # Excluding the open-ended questions
+# Visualize distribution of responses for the "Policy Design Framework/Process" section
+st.header("Policy Design Framework/Process")
+for question in data.columns[2:12]:  # First 10 questions
     value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
     value_counts.columns = ['Response', 'Count']
-    
-    # Plot
+    fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+    st.plotly_chart(fig)
+
+# Visualize distribution of responses for the "Memo Writing" section
+st.header("Memo Writing")
+for question in data.columns[12:15]:  # Next 3 questions
+    value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+    value_counts.columns = ['Response', 'Count']
+    fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+    st.plotly_chart(fig)
+
+# Visualize distribution of responses for the "Oral Briefing" section
+st.header("Oral Briefing")
+for question in data.columns[15:18]:  # Final 3 questions
+    value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+    value_counts.columns = ['Response', 'Count']
     fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
     st.plotly_chart(fig)
 
