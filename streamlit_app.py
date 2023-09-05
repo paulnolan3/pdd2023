@@ -7,8 +7,13 @@ import plotly.express as px
 data = pd.read_excel("PPD_Competencies.xlsx")
 
 # Sidebar for PDD Section filter
-selected_section = st.sidebar.selectbox("Select PDD Section", data["PDD Section"].unique())
-filtered_data = data[data["PDD Section"] == selected_section]
+sections = ["All sections"] + list(data["PDD Section"].unique())
+selected_section = st.sidebar.selectbox("Select PDD Section", sections)
+
+if selected_section == "All sections":
+    filtered_data = data
+else:
+    filtered_data = data[data["PDD Section"] == selected_section]
 
 # Display summary statistics for the selected section
 st.write(f"Summary Statistics for {selected_section}")
