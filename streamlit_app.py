@@ -1,48 +1,49 @@
+# Import necessary libraries
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
-@st.cache
-def load_data():
-    # Load data here
-    return pd.read_csv("survey_data.csv")
+# Load the data
+data = pd.read_excel("PPD_Competencies.xlsx")
 
-data = load_data()
+# Sidebar for PDD Section filter using radio buttons
+sections = ["All sections"] + list(data["PDD Section"].unique())
+selected_section = st.sidebar.radio("Select PDD Section", sections)
 
-# Conversion dictionary
-conversion_dict = {
-    "Strongly Disagree": 1,
-    "Disagree": 2,
-    "Neutral": 3,
-    "Agree": 4,
-    "Strongly Agree": 5
-}
+# Sidebar buttons for navigating to sections
+selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Process", "Memo Writing", "Oral Briefing"])
 
-# Convert the data using the dictionary
-for col in data.columns[2:]:
-    data[col] = data[col].map(conversion_dict)
+# Define Likert scale ordering and corresponding colors
+likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
+colors = {'Strongly Agree': 'green', 'Agree': 'lightgreen', 'Neutral': 'gray', 'Disagree': 'lightcoral', 'Strongly Disagree': 'red'}
 
-# Filtering the data
-st.sidebar.header('Filter Data')
-regions = st.sidebar.multiselect('Region', data['Region'].unique())
-roles = st.sidebar.multiselect('Role', data['Role'].unique())
+# Filter data according to the selected section
+if selected_section == "All sections":
+    filtered_data = data
+else:
+    filtered_data = data[data["PDD Section"] == selected_section]
 
-filtered_data = data[data['Region'].isin(regions) & data['Role'].isin(roles)]
+# Only show content for the selected anchor
+if selected_anchor == "Policy Design Framework/Process":
+    st.header("Policy Design Framework/Process")
+    for question in data.columns[2:12]:  # First 10 questions
+        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+        value_counts.columns = ['Response', 'Count']
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
+        st.plotly_chart(fig)
 
-# Display data
-st.write(filtered_data)
+elif selected_anchor == "Memo Writing":
+    st.header("Memo Writing")
+    for question in data.columns[12:15]:  # Next 3 questions
+        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+        value_counts.columns = ['Response', 'Count']
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
+        st.plotly_chart(fig)
 
-# Navigation
-nav = st.sidebar.radio('', ['Home', 'Navigate to'])
-
-if nav == 'Navigate to':
-    st.header("Summary Statistics")
-    
-    # Calculate the average scores for each section
-    policy_design_avg = filtered_data[data.columns[2:12]].mean(axis=1).mean()
-    st.write(f"Average score for Policy Design: {policy_design_avg:.2f}")
-    
-    process_avg = filtered_data[data.columns[12:22]].mean(axis=1).mean()
-    st.write(f"Average score for Process: {process_avg:.2f}")
-    
-    people_avg = filtered_data[data.columns[22:32]].mean(axis=1).mean()
-    st.write(f"Average score for People: {people_avg:.2f}")
+elif selected_anchor == "Oral Briefing":
+    st.header("Oral Briefing")
+    for question in data.columns[15:18]:  # Final 3 questions
+        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+        value_counts.columns = ['Response', 'Count']
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
+        st.plotly_chart(fig)
