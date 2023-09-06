@@ -17,7 +17,7 @@ selected_section = st.sidebar.radio("Select PDD Section", sections)
 selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Process", "Memo Writing", "Oral Briefing"])
 
 # Push the markdown to the bottom with empty space
-for _ in range(20):  # Adjust this number to fit the spacing as needed
+for _ in range(90):  # Adjust this number to fit the spacing as needed
     st.sidebar.empty()
 
 # Add footer with custom color to the sidebar
