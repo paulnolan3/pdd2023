@@ -1,7 +1,8 @@
-# Import necessary libraries
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.io as pio
+import io
 
 # Display logo at the top of the sidebar
 st.sidebar.image("logo.png", use_column_width=True)
@@ -16,13 +17,6 @@ selected_section = st.sidebar.radio("Select PDD Section", sections)
 # Sidebar buttons for navigating to sections
 selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Process", "Memo Writing", "Oral Briefing"])
 
-# Push the markdown to the bottom with empty space
-for _ in range(90):  # Adjust this number to fit the spacing as needed
-    st.sidebar.empty()
-
-# Add footer with custom color to the sidebar
-st.sidebar.markdown('<p style="color: #c0c2c5;">This app built with 🤍 for HKS by Paul Nolan</p>', unsafe_allow_html=True)
-
 # Define Likert scale ordering and corresponding colors
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 colors = {'Strongly Agree': 'green', 'Agree': 'lightgreen', 'Neutral': 'gray', 'Disagree': 'lightcoral', 'Strongly Disagree': 'red'}
@@ -35,11 +29,21 @@ else:
 
 # Function to plot individual chart
 def plot_chart(question):
+    # Break long titles into two lines
+    display_title = "<br>".join([question[i:i+30] for i in range(0, len(question), 30)])
+    
     value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
     value_counts.columns = ['Response', 'Count']
-    fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
+    fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {display_title}", color='Response', color_discrete_map=colors)
     fig.update_layout(margin=dict(l=150))  # Adjust the left margin to give titles more space
-    return st.plotly_chart(fig)
+
+    # Convert the figure to PNG image
+    img_bytes = pio.to_image(fig, format="png")
+    buf = io.BytesIO(img_bytes)
+    buf.seek(0)
+    
+    st.plotly_chart(fig)
+    st.download_button(label="Download PNG", data=buf, file_name=f"{question}.png", mime="image/png")
 
 # Show content based on the selected anchor
 if selected_anchor == "Policy Design Framework/Process":
