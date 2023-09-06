@@ -13,8 +13,9 @@ selected_section = st.sidebar.radio("Select PDD Section", sections)
 # Sidebar buttons for navigating to sections
 selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Process", "Memo Writing", "Oral Briefing"])
 
-# Define Likert scale ordering
+# Define Likert scale ordering and corresponding colors
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
+colors = {'Strongly Agree': 'green', 'Agree': 'lightgreen', 'Neutral': 'gray', 'Disagree': 'lightcoral', 'Strongly Disagree': 'red'}
 
 # Filter data according to the selected section
 if selected_section == "All sections":
@@ -28,7 +29,7 @@ if selected_anchor == "Policy Design Framework/Process":
     for question in data.columns[2:12]:  # First 10 questions
         value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
         value_counts.columns = ['Response', 'Count']
-        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
         st.plotly_chart(fig)
 
 elif selected_anchor == "Memo Writing":
@@ -36,7 +37,7 @@ elif selected_anchor == "Memo Writing":
     for question in data.columns[12:15]:  # Next 3 questions
         value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
         value_counts.columns = ['Response', 'Count']
-        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
         st.plotly_chart(fig)
 
 elif selected_anchor == "Oral Briefing":
@@ -44,5 +45,5 @@ elif selected_anchor == "Oral Briefing":
     for question in data.columns[15:18]:  # Final 3 questions
         value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
         value_counts.columns = ['Response', 'Count']
-        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}")
+        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
         st.plotly_chart(fig)
