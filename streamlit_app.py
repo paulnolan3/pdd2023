@@ -34,24 +34,20 @@ def plot_chart(question):
 if selected_anchor == "Policy Design Framework/Process":
     st.header("Policy Design Framework/Process")
     # Create columns for side-by-side charts
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         for question in data.columns[2:7]:  # First 5 questions
-            with st.expander(question):
-                plot_chart(question)
+            plot_chart(question)
     with col2:
         for question in data.columns[7:12]:  # Next 5 questions
-            with st.expander(question):
-                plot_chart(question)
+            plot_chart(question)
 
 elif selected_anchor == "Memo Writing":
     st.header("Memo Writing")
-    questions = data.columns[12:15]  # Next 3 questions
-    question_to_plot = st.selectbox("Select a question to view", questions)
-    plot_chart(question_to_plot)
+    for question in data.columns[12:15]:  # Next 3 questions
+        plot_chart(question)
 
 elif selected_anchor == "Oral Briefing":
     st.header("Oral Briefing")
-    questions = data.columns[15:18]  # Final 3 questions
-    question_to_plot = st.selectbox("Select a question to view", questions)
-    plot_chart(question_to_plot)
+    for question in data.columns[15:18]:  # Final 3 questions
+        plot_chart(question)
