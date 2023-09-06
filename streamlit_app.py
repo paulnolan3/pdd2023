@@ -57,6 +57,3 @@ elif selected_anchor == "Oral Briefing":
     st.header("Oral Briefing")
     for question in data.columns[15:18]:  # Final 3 questions
         plot_chart(question)
-
-# Add footer to the sidebar
-st.sidebar.markdown("This app built with 🤍 for HKS by Paul Nolan")
