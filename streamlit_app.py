@@ -28,19 +28,14 @@ def plot_chart(question):
     value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
     value_counts.columns = ['Response', 'Count']
     fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
+    fig.update_layout(title_x=0.5)  # Center the title to avoid cutoff
     return st.plotly_chart(fig)
 
 # Show content based on the selected anchor
 if selected_anchor == "Policy Design Framework/Process":
     st.header("Policy Design Framework/Process")
-    # Create columns for side-by-side charts
-    col1, col2 = st.columns(2)
-    with col1:
-        for question in data.columns[2:7]:  # First 5 questions
-            plot_chart(question)
-    with col2:
-        for question in data.columns[7:12]:  # Next 5 questions
-            plot_chart(question)
+    for question in data.columns[2:12]:  # First 10 questions
+        plot_chart(question)
 
 elif selected_anchor == "Memo Writing":
     st.header("Memo Writing")
