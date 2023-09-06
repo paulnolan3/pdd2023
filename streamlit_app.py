@@ -23,27 +23,35 @@ if selected_section == "All sections":
 else:
     filtered_data = data[data["PDD Section"] == selected_section]
 
-# Only show content for the selected anchor
+# Function to plot individual chart
+def plot_chart(question):
+    value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
+    value_counts.columns = ['Response', 'Count']
+    fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
+    return st.plotly_chart(fig)
+
+# Show content based on the selected anchor
 if selected_anchor == "Policy Design Framework/Process":
     st.header("Policy Design Framework/Process")
-    for question in data.columns[2:12]:  # First 10 questions
-        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
-        value_counts.columns = ['Response', 'Count']
-        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
-        st.plotly_chart(fig)
+    # Create columns for side-by-side charts
+    col1, col2 = st.beta_columns(2)
+    with col1:
+        for question in data.columns[2:7]:  # First 5 questions
+            with st.expander(question):
+                plot_chart(question)
+    with col2:
+        for question in data.columns[7:12]:  # Next 5 questions
+            with st.expander(question):
+                plot_chart(question)
 
 elif selected_anchor == "Memo Writing":
     st.header("Memo Writing")
-    for question in data.columns[12:15]:  # Next 3 questions
-        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
-        value_counts.columns = ['Response', 'Count']
-        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
-        st.plotly_chart(fig)
+    questions = data.columns[12:15]  # Next 3 questions
+    question_to_plot = st.selectbox("Select a question to view", questions)
+    plot_chart(question_to_plot)
 
 elif selected_anchor == "Oral Briefing":
     st.header("Oral Briefing")
-    for question in data.columns[15:18]:  # Final 3 questions
-        value_counts = filtered_data[question].value_counts().reindex(likert_order).reset_index()
-        value_counts.columns = ['Response', 'Count']
-        fig = px.bar(value_counts, x='Response', y='Count', title=f"Responses for: {question}", color='Response', color_discrete_map=colors)
-        st.plotly_chart(fig)
+    questions = data.columns[15:18]  # Final 3 questions
+    question_to_plot = st.selectbox("Select a question to view", questions)
+    plot_chart(question_to_plot)
