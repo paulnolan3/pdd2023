@@ -16,14 +16,6 @@ selected_section = st.sidebar.radio("Select PDD Section", sections)
 # Sidebar buttons for navigating to sections
 selected_anchor = st.sidebar.radio("Navigate to", ["Policy Design Framework/Process", "Memo Writing", "Oral Briefing"])
 
-# Push the markdown to the bottom with empty space
-for _ in range(90):  # Adjust this number to fit the spacing as needed
-    st.sidebar.empty()
-
-# Add footer with custom color to the sidebar
-st.sidebar.markdown('<p style="color: #c0c2c5;">This app built with 🤍 for HKS by Paul Nolan</p>', unsafe_allow_html=True)
-
-
 # Define Likert scale ordering and corresponding colors
 likert_order = ["Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"]
 colors = {'Strongly Agree': 'green', 'Agree': 'lightgreen', 'Neutral': 'gray', 'Disagree': 'lightcoral', 'Strongly Disagree': 'red'}
