@@ -3,6 +3,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+# Display logo at the top of the sidebar
+st.sidebar.image("logo.png", use_column_width=True)
+
 # Load the data
 data = pd.read_excel("PPD_Competencies.xlsx")
 
